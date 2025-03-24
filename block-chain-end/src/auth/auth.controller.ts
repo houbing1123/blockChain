@@ -1,22 +1,17 @@
-import { Controller, Post, Body, Put } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { LoginUserDto } from './DTO/loginUser.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
-
-  @Post('register')
-  async register(@Body('username') username: string, @Body('password') password: string) {
-    return this.authService.register(username, password);
-  }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body('username') username: string, @Body('password') password: string) {
-    return this.authService.login(username, password);
-  }
-
-  @Put('update')
-  async updatePassword(@Body('username') username: string, @Body('newPassword') newPassword: string) {
-    return this.authService.updatePassword(username, newPassword);
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const user = await this.authService.validateUser(loginUserDto.username, loginUserDto.password);
+    if (!user) {
+      throw new UnauthorizedException('用户名或密码错误');
+    }
+    return this.authService.login(user);
   }
 }

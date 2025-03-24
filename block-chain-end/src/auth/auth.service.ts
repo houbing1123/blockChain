@@ -1,38 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-
-type User = { id: number; username: string; password: string };
-
+import { UsersService } from '../users/users.service';
+import * as bcrypt from 'bcrypt';
+import Response from 'src/shared/responses/response';
+import {CreateUserDto} from '../users/DTO/user.dto';
 @Injectable()
 export class AuthService {
-  private users:User[] = []; // 临时存储用户数据，实际项目应使用数据库
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  constructor(private jwtService: JwtService) {}
-
-  async register(username: string, password: string) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user:User = { id: Date.now(), username, password: hashedPassword };
-    this.users.push(user);
-    return { message: 'User registered successfully' };
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.usersService.findOneByUsername(username);
+    if (user && await bcrypt.compare(password, user.password)) {
+      const { password, ...result } = user; // 去除密码字段
+      return result;
+    }
+    return null;
   }
 
-  async login(username: string, password: string) {
-    const user = this.users.find((u) => u.username === username);
-    if (!user) return { message: 'User not found' };
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.id };
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return { message: 'Invalid credentials' };
-
-    const token = this.jwtService.sign({ userId: user.id, username: user.username });
-    return { access_token: token };
+    if(user){
+      return Response.success({
+        access_token: this.jwtService.sign(payload),
+      });
+    }else{
+      return Response.unauthorized({});
+    }
   }
-
-  async updatePassword(username: string, newPassword: string) {
-    const user = this.users.find((u) => u.username === username);
-    if (!user) return { message: 'User not found' };
-
-    user.password = await bcrypt.hash(newPassword, 10);
-    return { message: 'Password updated successfully' };
+  async register(user: any) { // 注册
+    const { username, password,email } = user;
+    const userExist = await this.usersService.findOneByUsername(username);
+    if (userExist) {
+      return Response.fail('用户名已存在');
+    }
+    const hashPassword = await bcrypt.hash(password, 10);
+    const User:CreateUserDto = { username, password: hashPassword,email }
+    const newUser = await this.usersService.create(User);
+    return Response.success(newUser);
   }
 }
