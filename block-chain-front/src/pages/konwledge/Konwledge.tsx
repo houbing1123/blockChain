@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 
-const Home:React.FC = ():ReactElement => {
+const Konwledge:React.FC = ():ReactElement => {
     return (
         <div>
             <h1>hello homepage</h1>
@@ -8,4 +8,4 @@ const Home:React.FC = ():ReactElement => {
     );
 };
 
-export default Home
+export default Konwledge

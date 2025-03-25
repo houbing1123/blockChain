@@ -4,7 +4,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Login from './pages/login/Login'
-import Home from './pages/home/Home'
+import Konwledge from './pages/konwledge/Konwledge'
 import Register from './pages/register/Register'
 import './App.css'
 
@@ -12,7 +12,7 @@ const App:React.FC = ():ReactElement =>{
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
+      element: <Konwledge />,
     },
     {
       path: "/login",
