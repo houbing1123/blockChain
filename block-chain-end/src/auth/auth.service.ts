@@ -11,9 +11,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(username: string, password: string|number): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
-    if (user && await bcrypt.compare(password, user.password)) {
+    const passwordStr = password.toString();
+    if (user && await bcrypt.compare(passwordStr, user.password)) {
       const { password, ...result } = user; // 去除密码字段
       return result;
     }
@@ -31,7 +32,7 @@ export class AuthService {
       return Response.unauthorized({});
     }
   }
-  async register(user: any) { // 注册
+  async register(user: CreateUserDto) { // 注册
     const { username, password,email } = user;
     const userExist = await this.usersService.findOneByUsername(username);
     if (userExist) {
