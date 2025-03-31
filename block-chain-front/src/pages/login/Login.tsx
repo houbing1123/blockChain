@@ -1,38 +1,39 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from "react-router-dom";
-import {Input,Button} from "antd"
+import {Input,Button,message} from "antd"
+import {requestLogin} from "../../services/login"
 
 const Login:React.FC = ():ReactElement => {
+    const [username, setUsername] = React.useState<string>('');
+    const [password, setPassword] = React.useState<string>('');
     const navigate = useNavigate();
-    const submit = ():void =>{
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const submit = async() =>{
         console.log('submit')
-        fetch('http://localhost:3000/api/login',{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: 'admin',
-                password: '123456'
-            })
-        }).then(res => res.json()).then(res => {
-            console.log(res);
-        }).catch(err => {
-            console.log(err);   
-        })
+        const login = await requestLogin(username, password);
+        console.log(login);
+        if(login.code === 200){
+            messageApi.success('登录成功')
+            navigate('/konwledge')
+        }else{
+            messageApi.error(`登录失败:${login.message}`)
+        }
+         
     }
     const toRegister = ():void =>{
         navigate('/register')
     }
     return (
         <div>
+            {contextHolder}
             <h1>Login</h1>
             <div>
-                <Input placeholder='请输入账户'></Input>
+                <Input placeholder='请输入账户' value={username} onChange={(e)=>setUsername(e.target.value)}></Input>
             </div>
             <br />
             <div>
-                <Input placeholder='请输入密码' type='password'></Input>
+                <Input placeholder='请输入密码' type='password' value={password} onChange={(e)=>setPassword(e.target.value)}></Input>
             </div>
             <br />
             <div style={{

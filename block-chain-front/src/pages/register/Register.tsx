@@ -1,29 +1,22 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from "react-router-dom";
-import {Input,Button} from "antd"
+import {Input,Button, message} from "antd"
+import {requestRegister} from "../../services/login"
 
 const Register:React.FC = ():ReactElement => {
     const [username, setUsername] = React.useState<string>('');
     const [password, setPassword] = React.useState<string>('');
+    const [email, setEmail] = React.useState<string>('');
     const navigate = useNavigate();
+    const [messageApi, contextHolder] = message.useMessage();
+    
     const register = ():void =>{
-        console.log('register')
-        fetch('http://localhost:5170/auth/register',{
-            method: 'POST',
-            headers: {  'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        }).then(res => res.json())
-        .then(res => {
+        requestRegister(username, password,email).then(res=>{
             if(res.code === 200){
-                console.log('注册成功')
+                messageApi.success('注册成功')
             }else{
-                console.log('注册失败')
+                messageApi.error('注册失败')
             }
-        }).catch(err => {
-            console.log(err)    
         })
     }
     const toLogin = ():void =>{
@@ -31,6 +24,7 @@ const Register:React.FC = ():ReactElement => {
     }
     return (
         <div>
+            {contextHolder}
             <h1>Register</h1>
             <div>
                 <Input value={username} onChange={(e)=>setUsername(e.target.value)} placeholder='请输入账户'></Input>
@@ -38,6 +32,10 @@ const Register:React.FC = ():ReactElement => {
             <br />
             <div>
                 <Input value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='请输入密码' type='password'></Input>
+            </div>
+            <br />
+            <div>
+                <Input value={email} onChange={(e)=>setEmail(e.target.value)} placeholder='请输入邮箱' type='email'></Input>
             </div>
             <br />
             <div style={{

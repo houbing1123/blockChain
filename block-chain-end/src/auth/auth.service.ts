@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import Response from 'src/shared/responses/response';
 import {CreateUserDto} from '../users/DTO/user.dto';
+import { LoginUserDto } from './DTO/loginUser.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -23,23 +24,31 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.username, sub: user.id };
+    console.dir(payload);
 
     if(user){
       return Response.success({
         access_token: this.jwtService.sign(payload),
+        user
       });
     }else{
       return Response.unauthorized({});
     }
   }
-  async register(user: CreateUserDto) { // 注册
+  async register(user: LoginUserDto) { // 注册
     const { username, password,email } = user;
     const userExist = await this.usersService.findOneByUsername(username);
     if (userExist) {
       return Response.fail('用户名已存在');
     }
     const hashPassword = await bcrypt.hash(password, 10);
-    const User:CreateUserDto = { username, password: hashPassword,email }
+    const User:CreateUserDto = { 
+      username, 
+      password: hashPassword,
+      email,
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    };
     const newUser = await this.usersService.create(User);
     return Response.success(newUser);
   }
