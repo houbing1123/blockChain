@@ -1,5 +1,4 @@
 import { useFetch } from "../hooks/useFetch";
-
 export const requestLogin = async (username: string, password: string):Promise<LoginResponse> => {
     return await useFetch('/api/auth/login', {
         method: 'POST',
