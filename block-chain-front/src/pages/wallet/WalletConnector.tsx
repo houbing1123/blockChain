@@ -74,7 +74,7 @@ export default function WalletConnector() {
   }
 
   return (
-    <>
+    <div className='w100 h100 flex-c-c'>
     <Card title="以太坊钱包" style={{ width: 500 }}>
       <Space direction="vertical" style={{ width: '100%' }}>
         {address ? (
@@ -134,7 +134,7 @@ export default function WalletConnector() {
         <p>助记词: {newWallet.mnemonic}</p>
       </div>,
       </Modal>
-    </>
+    </div>
     
   )
 }

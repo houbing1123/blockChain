@@ -67,7 +67,7 @@ const User: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className='w100 h100'>
       <Card title="个人信息">
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex flex-col items-center">

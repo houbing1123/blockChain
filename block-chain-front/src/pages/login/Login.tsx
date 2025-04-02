@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { useNavigate } from "react-router-dom";
 import {Input,Button,message} from "antd"
 import {requestLogin} from "../../services/login"
+import { setLocal } from '../../utils';
 
 const Login:React.FC = ():ReactElement => {
     const [username, setUsername] = React.useState<string>('');
@@ -15,6 +16,7 @@ const Login:React.FC = ():ReactElement => {
         console.log(login);
         if(login.code === 200){
             messageApi.success('登录成功')
+            setLocal('token', login.data.access_token)
             navigate('/konwledge')
         }else{
             messageApi.error(`登录失败:${login.message}`)
@@ -25,9 +27,10 @@ const Login:React.FC = ():ReactElement => {
         navigate('/register')
     }
     return (
-        <div>
+        <div className='w100 h100 flex-c-c'>
             {contextHolder}
-            <h1>Login</h1>
+           <div>
+           <h1>Login</h1>
             <div>
                 <Input placeholder='请输入账户' value={username} onChange={(e)=>setUsername(e.target.value)}></Input>
             </div>
@@ -44,6 +47,7 @@ const Login:React.FC = ():ReactElement => {
                 <Button type='primary' onClick={toRegister}>注册</Button>
             </div>
             
+           </div>
         </div>
     );
 };

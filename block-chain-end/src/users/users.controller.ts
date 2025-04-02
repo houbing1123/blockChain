@@ -5,11 +5,14 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @Controller('users')
 export class UsersController {
     constructor (private readonly usersService: UsersService) {}
+
+    @UseGuards(JwtAuthGuard)
     @Post('create')
     async create( @Body() creatUserDto: CreateUserDto) {
         return this.usersService.create(creatUserDto);
     }
-    
+
+    @UseGuards(JwtAuthGuard)
     @Post('update')
     async update( @Body() updateUserDto: UpdateUserDto) {
         let id:number = updateUserDto.id;
@@ -18,6 +21,8 @@ export class UsersController {
         }
         return this.usersService.updateUser(id, updateUserDto);
     }
+    
+    @UseGuards(JwtAuthGuard)
     @Post('delete')
     async delete( @Body() id: number) {
         return this.usersService.deleteUser(id);

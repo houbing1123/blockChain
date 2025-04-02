@@ -10,12 +10,14 @@ const useFetch = async <T>(url: string, options: RequestInit):Promise<T> => {
             ...options
     });
     if(!response.ok){
-        throw new Error(response.statusText);
+        if(response.status === 401){
+            unAuth({code:401, message: 'Unauthorized', data: {}});
+        }
+        throw new Error(response.statusText); 
     }
+    
    
-    const json = await response.json();
-    unAuth(json)
-    return json
+    return await response.json();
 }
 
 export {
