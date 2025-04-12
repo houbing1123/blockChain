@@ -17,6 +17,7 @@ const Login:React.FC = ():ReactElement => {
         if(login.code === 200){
             messageApi.success('登录成功')
             setLocal('token', login.data.access_token)
+            setLocal('user', login.data.user)
             navigate('/konwledge')
         }else{
             messageApi.error(`登录失败:${login.message}`)

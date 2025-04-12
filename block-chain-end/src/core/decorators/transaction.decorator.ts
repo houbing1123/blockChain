@@ -1,5 +1,4 @@
-// src/core/decorators/ensure-persisted.decorator.ts
-import { Repository } from 'typeorm';
+import { EntityManager } from 'typeorm';
 
 export function Transaction() {
   return function (
@@ -10,16 +9,12 @@ export function Transaction() {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
-      const result = await originalMethod.apply(this, args);
-      
-      // 自动验证保存结果
-      if (result instanceof Repository) {
-        const entity = await result.findOne(args[0].id);
-        if (!entity) throw new Error('数据未持久化');
-        return entity;
+      const manager = args[args.length - 1] as EntityManager;
+      if (!manager) {
+        throw new Error('EntityManager is not provided');
       }
-      
-      return result;
+      // Begin transaction, pass to the original method
+      return await originalMethod.apply(this, args);
     };
   };
 }

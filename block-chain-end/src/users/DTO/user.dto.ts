@@ -9,5 +9,5 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto extends CreateUserDto {
-  id: number;
+  id: string;
 }

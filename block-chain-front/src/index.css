@@ -59,3 +59,12 @@
 .top-line{
   border-top: 1px solid #8c8c8cca;
 }
+.margin-left-10{
+  margin-left: 10px;
+}
+.margin-right-10{
+  margin-right: 10px;
+}
+.nohover:hover{
+  background-color: transparent!important;
+}

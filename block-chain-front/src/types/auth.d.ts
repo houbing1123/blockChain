@@ -15,3 +15,13 @@ interface registerResponse extends Reponse {
     message: string;
     data: Object
 }
+
+type User = {
+    id: number;
+    username: string;
+    email: string|null;
+    password: string;
+    created_at: string|null;
+    updated_at: string|null;
+    [key: string]: any;
+}

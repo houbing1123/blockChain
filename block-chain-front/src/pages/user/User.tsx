@@ -1,36 +1,24 @@
 // src/pages/UserProfile.tsx
 import React, { useState } from 'react';
-import { useLoaderData, useNavigate } from 'react-router-dom';
 import { Avatar, Button, Card, Form, Input, message, Upload, UploadProps } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, CameraOutlined } from '@ant-design/icons';
+import { getLocal,getToken, setLocal } from '../../utils';
 
-interface UserData {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-}
-
-export async function userLoader() {
-  // 实际项目中这里应该是从API获取用户数据
-  return {
-    id: '123',
-    name: '张三',
-    email: 'zhangsan@example.com',
-    avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
-  };
-}
 
 const User: React.FC = () => {
-  const user = useLoaderData() as UserData;
+  const user:User = getLocal("user") as User;
   const [form] = Form.useForm();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState(user.avatar);
+  const [avatar, setAvatar] = useState(`/api${user.avatar}`);
 
   const uploadProps: UploadProps = {
-    name: 'avatar',
+    name: 'file',
+    action:  `/api/users/${user._id}/avatar`, // 实际项目中这里应该是上传头像的API地址
     showUploadList: false,
+    method: 'PUT',
+    headers: {
+      authorization: `Bearer ${getToken()}`, // 实际项目中这里应该是获取token的方式
+    },
     beforeUpload: (file) => {
       const isImage = file.type.startsWith('image/');
       if (!isImage) {
@@ -41,12 +29,15 @@ const User: React.FC = () => {
     onChange: (info) => {
       if (info.file.status === 'done') {
         // 实际项目中这里应该调用API上传头像
-        const reader = new FileReader();
-        reader.readAsDataURL(info.file.originFileObj as Blob);
-        reader.onload = () => {
-          setAvatar(reader.result as string);
-          message.success('头像上传成功');
-        };
+        console.log(info,'info');
+        const response = info.file.response;
+        if(response && response.code === 200) {
+          console.log('上传成功，接口返回：', response);
+          setLocal("user", {...response.data});
+          // 假设接口返回：{ url: '/assets/avatar/xxx.jpg' }
+          message.success(`${info.file.name} 上传成功`);
+          setAvatar(`/api${response.data.avatar}`); // 更新头像
+        }
       }
     },
   };

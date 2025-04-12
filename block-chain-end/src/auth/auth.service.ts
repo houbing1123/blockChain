@@ -37,6 +37,12 @@ export class AuthService {
   }
   async register(user: LoginUserDto) { // 注册
     const { username, password,email } = user;
+    if(!username){
+      return Response.fail('用户名不能为空');
+    }
+    if(!password){
+      return Response.fail('密码不能为空');
+    }
     const userExist = await this.usersService.findOneByUsername(username);
     if (userExist) {
       return Response.fail('用户名已存在');

@@ -1,6 +1,6 @@
 import {
     createBrowserRouter,
-    json
+    redirect
 } from "react-router-dom";
 import AppLayout from "./pages/Layout";
 import Login from './pages/login/Login'
@@ -9,11 +9,11 @@ import Register from './pages/register/Register'
 import WalletConnector from './pages/wallet/WalletConnector'
 import AuthGuard from "./pages/authRouter/AuthRouter"
 import User from "./pages/user/User"
-import { getLocal } from "./utils";
+import { getToken } from "./utils";
 
 
 const isAuth = ()=>{
-  const token = getLocal('token')
+  const token = getToken()
   if(!token){
     throw new Response("Unauthorized",{status:401})
   }
@@ -34,10 +34,6 @@ const layoutRouter = [
     path: "/User",
     element: <User />,
   }, 
-  // {
-  //   path: "/register",
-  //   element: <Register />,
-  // },
 ].map(item=>{
   return {
     ...item,
@@ -46,6 +42,10 @@ const layoutRouter = [
   }
 })
 const routers = [
+  {
+    path: "/",
+    loader:()=>redirect("/Konwledge"),
+  },
   {
     path: "/login",
     element: <Login />,
@@ -60,4 +60,6 @@ const routers = [
     children:layoutRouter
   }
 ]
-export const router = createBrowserRouter(routers)
+export const router = createBrowserRouter(routers,{
+  basename: "/web3"
+})

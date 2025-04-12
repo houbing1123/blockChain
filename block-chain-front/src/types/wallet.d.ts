@@ -4,6 +4,12 @@ type Wallet = {
   mnemonic: string|undefined|null
 }
 
-interface WalletResponse extends Response {
+interface WalletResponse extends LocalReponse {
   data: Wallet
+}
+
+interface WalletBalanceResponse extends LocalReponse {
+  data: {
+    formattedBalance: string
+  }
 }

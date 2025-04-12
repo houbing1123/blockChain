@@ -6,7 +6,7 @@ interface Window {
     }
 }
 
-interface Reponse {
+interface LocalReponse {
     code: number;
     message: string;
     data: Object

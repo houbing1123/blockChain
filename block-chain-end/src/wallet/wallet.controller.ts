@@ -15,4 +15,12 @@ export class WalletController {
         console.dir(walletDto);
         return this.walletService.createEncryptedWallet(walletDto.id,walletDto.password);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('getBalance')
+    async getBalance(@Body() data: {address:string}) {
+        console.log(`address:`);
+        console.dir(data);
+        return this.walletService.getBalance(data.address);
+    }
 }

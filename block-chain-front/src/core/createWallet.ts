@@ -1,11 +1,12 @@
 import { ethers } from 'ethers'
-import {createWallet} from '../services/wallet'
+// import {createWallet} from '../services/wallet'
 
 
 export class EthereumWallet {
   private provider?: ethers.BrowserProvider
   private signer?: ethers.JsonRpcSigner
   public address?: string
+  public localAddress?: string
 
   // 连接浏览器扩展钱包(如MetaMask)
   async connectBrowserWallet() {
@@ -19,11 +20,17 @@ export class EthereumWallet {
   }
 
   // 创建新钱包(不推荐前端直接生成私钥，仅演示用)
-  static async createRandomWallet ():Promise<WalletResponse> {
-    const wallet = await createWallet('admin')
+  static async createRandomWallet ():Promise<any> {
+    // const wallet = await createWallet('admin')
+    const wallet = ethers.Wallet.createRandom()
     console.log(wallet);
-
-    return wallet
+    const mnemonic = wallet.mnemonic?.phrase;
+    const privateKey = wallet.privateKey
+    return {
+      address: wallet.address,
+      mnemonic,
+      privateKey
+    }
   }
 
   // 获取余额
