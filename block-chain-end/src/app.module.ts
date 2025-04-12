@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './db/db.module';
 import { WalletModule } from './wallet/wallet.module';
+import { CustomLogger } from './logger/custom-logger.service';
+
 
 
 @Module({
@@ -14,7 +16,7 @@ import { WalletModule } from './wallet/wallet.module';
     AuthModule, 
     UsersModule, 
     WalletModule, 
-   
-  ]
+  ],
+  providers: [CustomLogger], // 直接注册
 })
 export class AppModule {}
