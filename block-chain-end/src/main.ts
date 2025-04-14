@@ -13,7 +13,7 @@ async function bootstrap() {
   app.use('/assets', express.static(join(process.cwd(), 'assets')));
   const customLogger = new CustomLogger(); // 创建 CustomLogger 实例
   app.useGlobalFilters(new GlobalExceptionFilter(customLogger)); // 注册全局过滤器
-  await app.listen(process.env.PORT ?? 5170);
+  await app.listen(process.env.PORT ?? 5170,"0.0.0.0");
   console.log(`应用运行在: ${await app.getUrl()}`);
 }
 bootstrap();
