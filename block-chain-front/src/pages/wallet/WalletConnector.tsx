@@ -275,8 +275,8 @@ export default function WalletConnector() {
         </Form.Item>
       </Form>
       </Modal>
-        {/* 查看余额 */}
-        <Modal
+      {/* 查看余额 */}
+      <Modal
         title="balance"
         width={800}
         open={balanceActive}

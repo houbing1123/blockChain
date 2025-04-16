@@ -9,11 +9,11 @@ const User: React.FC = () => {
   const user:User = getLocal("user") as User;
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState(`/api${user.avatar}`);
+  const [avatar, setAvatar] = useState(`/api${user?.avatar}`);
 
   const uploadProps: UploadProps = {
     name: 'file',
-    action:  `/api/users/${user._id}/avatar`, // 实际项目中这里应该是上传头像的API地址
+    action:  `/api/users/${user?._id}/avatar`, // 实际项目中这里应该是上传头像的API地址
     showUploadList: false,
     method: 'PUT',
     headers: {
@@ -75,7 +75,7 @@ const User: React.FC = () => {
                 </div>
               </div>
             </Upload>
-            <h2 className="text-xl font-semibold mt-2">{user.name}</h2>
+            <h2 className="text-xl font-semibold mt-2">{user?.name}</h2>
           </div>
 
           <div className="flex-1">
@@ -84,7 +84,7 @@ const User: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center">
                   <MailOutlined className="mr-2 text-gray-500" />
-                  <span>邮箱: {user.email}</span>
+                  <span>邮箱: {user?.email}</span>
                 </div>
               </div>
             </div>

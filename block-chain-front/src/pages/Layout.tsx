@@ -9,12 +9,14 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { getLocal } from "../utils";
+import { useEffect } from "react";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const AppLayout = () => {
   const navigate = useNavigate();
   const user: User = getLocal("user") as User;
+
   // 退出登录
   // 清除token并跳转到登录页面
   const quit = () => {
@@ -45,7 +47,7 @@ const AppLayout = () => {
   ];
 
   const MenuItems: MenuProps["items"] = [
-    {label: "首页", key: "/Konwledge", icon: <HomeOutlined />},
+    {label: "AI知识库", key: "/Konwledge", icon: <HomeOutlined />},
     {label: "web3", key: "/WalletConnector", icon: <UserOutlined />},
     {label: "个人中心", key: "/User", icon: <SettingOutlined />},
   ]
@@ -53,6 +55,13 @@ const AppLayout = () => {
     console.log('click ', e);
     navigate(e.key);
   };
+  useEffect(() => {
+    // 检查用户是否登录
+    if (!user) {
+      navigate("/login");
+    }
+  }
+  , []);
 
   return (
     <Layout className="flex-c-sb-d" style={{ width: "100vw", height: "100vh" }}>
@@ -66,7 +75,7 @@ const AppLayout = () => {
 
         <Dropdown menu={{ items }} placement="bottomRight">
           <div className="">
-            <Avatar src={`/api${user.avatar}`} icon={<UserOutlined />} className="point margin-right-10" />
+            <Avatar src={`/api${user?.avatar??''}`} icon={<UserOutlined />} className="point margin-right-10" />
             <span className="point">{user?.username ?? "unkown"}</span>
           </div>
         </Dropdown>
