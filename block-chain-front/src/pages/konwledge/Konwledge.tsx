@@ -7,6 +7,7 @@ import {
     useXAgent,
     useXChat,
   } from '@ant-design/x';
+  import type {Conversation} from '@ant-design/x/es/conversations/interface';
   import { createStyles } from 'antd-style';
   import React, { useEffect } from 'react';
   import {
@@ -26,7 +27,7 @@ import {
     </Space>
   );
   
-  const defaultConversationsItems:any[] = [
+  const defaultConversationsItems:Conversation[] = [
     {
       key: '0',
       label: '什么是区块链?',
@@ -197,13 +198,13 @@ import {
       request: async ({ message }, { onSuccess }) => {
         const response = await fetch("/ai/api/generate", {
           method: 'POST',
-          
           body: JSON.stringify({
             model: "deepseek-R1",
             prompt: message,
           }),
         });
         if (!response.ok) {
+          onSuccess('网络异常，请稍后再试');
           throw new Error('Network response was not ok');
         }
         const Text = new TextDecoder()
